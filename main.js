@@ -1,10 +1,10 @@
 
 'use strict';
 
-const title = document.getElementsByClassName('modal__title');
-const form = document.getElementsByClassName('overlay__modal');
-const checkbox = document.getElementsByName('discount');
-const promocode = document.getElementsByName('discount_count');
+const title = document.querySelector('.modal__title');
+const form = document.querySelector('.overlay__modal');
+const checkbox = document.querySelector('#discount');
+const promocode = document.querySelector('.modal__input_discount');
 
 console.log(title);
 console.log(form);
