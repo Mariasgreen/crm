@@ -76,8 +76,8 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 
 
   const tdnumber = document.createElement('td');
-  tdnumber.classList.add('table__cell');
-  tdnumber.classList.add('table__cell-num');
+  tdnumber.classList.add('table__cell', 'table__cell-num');
+ 
 
 
   const idSpan = document.createElement('span');
@@ -144,20 +144,24 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 };
 
 
-const renderGoods = (arr) => {
-  const allRow = arr.map(createRow);
 
-  table.append(...allRow);
-
-
+const numbers = () => {
   const numTd = table.querySelectorAll('.table__cell-num');
 
   let n = 1;
   numTd.forEach((i) => {
     i.textContent = n++;
   });
+}
+
+
+const renderGoods = (arr) => {
+  const allRow = arr.map(createRow);
+
+  table.append(...allRow);
+
 };
 
 renderGoods(arr);
 
-
+numbers()
