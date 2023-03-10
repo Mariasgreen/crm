@@ -69,25 +69,29 @@ const arr = [
 
 
 const table = document.querySelector('.table__body');
+const del = document.querySelectorAll('tr');
+del[1].remove()
+del[2].remove()
+
 
 const createRow = ({id, title, price, category, count, units, discont}) => {
   const tr = document.createElement('tr');
 
   const tdnumber = document.createElement('td');
-  tdnumber.classList.add('table__cell-id');
+  tdnumber.classList.add('table__cell');
 
   const idSpan = document.createElement('span');
   const tdTitle = document.createElement('td');
 
   tdTitle.classList.add('table__cell', 'table__cell_left', 'table__cell_name');
-  tdTitle.dataset.id = 24601654816512;
+
   idSpan.classList.add('table__cell-id');
   idSpan.textContent = id;
 
   tdTitle.textContent = title;
 
 
-  tdTitle.append(idSpan);
+  tdTitle.prepend(idSpan);
 
 
   const tdCategory = document.createElement('td');
@@ -136,13 +140,13 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 
 
   tr.append(tdnumber, tdTitle, tdCategory, tdUnit, tdCount, tdPrice, tdTotal, tdImages);
-  table.appendChild(tr);
+  return tr;
 };
 
 
 const renderGoods = (arr) => {
   const allRow = arr.map(createRow);
-  table.append(allRow);
+  table.append(...allRow);
 };
 
 renderGoods(arr);
