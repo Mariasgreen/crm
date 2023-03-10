@@ -69,16 +69,16 @@ const arr = [
 
 
 const table = document.querySelector('.table__body');
-const del = document.querySelectorAll('tr');
-del[1].remove()
-del[2].remove()
 
 
 const createRow = ({id, title, price, category, count, units, discont}) => {
   const tr = document.createElement('tr');
 
+
   const tdnumber = document.createElement('td');
   tdnumber.classList.add('table__cell');
+  tdnumber.classList.add('table__cell-num');
+
 
   const idSpan = document.createElement('span');
   const tdTitle = document.createElement('td');
@@ -86,7 +86,7 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   tdTitle.classList.add('table__cell', 'table__cell_left', 'table__cell_name');
 
   idSpan.classList.add('table__cell-id');
-  idSpan.textContent = id;
+  idSpan.textContent = 'ID: ' + id;
 
   tdTitle.textContent = title;
 
@@ -146,7 +146,16 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 
 const renderGoods = (arr) => {
   const allRow = arr.map(createRow);
+
   table.append(...allRow);
+
+
+  const numTd = table.querySelectorAll('.table__cell-num');
+
+  let n = 1;
+  numTd.forEach((i) => {
+    i.textContent = n++;
+  });
 };
 
 renderGoods(arr);
