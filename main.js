@@ -67,19 +67,36 @@ const arr = [
 
 ];
 
-
+const btn = document.querySelector('.panel__add-goods')
 const table = document.querySelector('.table__body');
+const modal  = document.querySelector('.overlay');
+const clost = document.querySelector('.modal__close')
+const form = document.querySelector('.overlay__modal')
 
 
+btn.addEventListener('click', () =>{
+  modal.classList.add('active');
+});
+
+form.addEventListener('click' , event =>{
+  event.stopImmediatePropagation()
+})
+
+
+modal.addEventListener('click' , () =>{
+modal.classList.remove('active')
+})
+
+clost.addEventListener('click' , () =>{
+  modal.classList.remove('active')
+  })
+  
 const createRow = ({id, title, price, category, count, units, discont}) => {
   const tr = document.createElement('tr');
 
 
   const tdnumber = document.createElement('td');
   tdnumber.classList.add('table__cell', 'table__cell-num');
- 
-
-
   const idSpan = document.createElement('span');
   const tdTitle = document.createElement('td');
 
@@ -144,7 +161,6 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 };
 
 
-
 const numbers = () => {
   const numTd = table.querySelectorAll('.table__cell-num');
 
@@ -152,16 +168,15 @@ const numbers = () => {
   numTd.forEach((i) => {
     i.textContent = n++;
   });
-}
+};
 
 
 const renderGoods = (arr) => {
   const allRow = arr.map(createRow);
 
   table.append(...allRow);
-
 };
 
 renderGoods(arr);
 
-numbers()
+numbers();
