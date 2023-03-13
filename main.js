@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 
 'use strict';
@@ -67,33 +68,27 @@ const arr = [
 
 ];
 
-const btn = document.querySelector('.panel__add-goods')
+const btn = document.querySelector('.panel__add-goods');
 const table = document.querySelector('.table__body');
-const modal  = document.querySelector('.overlay');
-const clost = document.querySelector('.modal__close')
-const form = document.querySelector('.overlay__modal')
+const modal = document.querySelector('.overlay');
 
 
-btn.addEventListener('click', () =>{
+btn.addEventListener('click', () => {
   modal.classList.add('active');
 });
 
-form.addEventListener('click' , event =>{
-  event.stopImmediatePropagation()
-})
+
+modal.addEventListener('click', (e) => {
+  const target = e.target;
+  if (target === modal || target.closest('.modal__close')) {
+    modal.classList.remove('active');
+  }
+});
 
 
-modal.addEventListener('click' , () =>{
-modal.classList.remove('active')
-})
-
-clost.addEventListener('click' , () =>{
-  modal.classList.remove('active')
-  })
-  
 const createRow = ({id, title, price, category, count, units, discont}) => {
   const tr = document.createElement('tr');
-
+  tr.classList.add('row');
 
   const tdnumber = document.createElement('td');
   tdnumber.classList.add('table__cell', 'table__cell-num');
@@ -169,6 +164,18 @@ const numbers = () => {
     i.textContent = n++;
   });
 };
+
+console.log(arr);
+table.addEventListener('click', (e) => {
+  const target = e.target;
+
+  if (target.closest('.table__btn_del')) {
+    target.closest('.row').remove();
+  }
+  const a = arr.indexOf(target);
+  arr.splice(a);
+  console.log(arr);
+});
 
 
 const renderGoods = (arr) => {
