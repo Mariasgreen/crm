@@ -71,6 +71,20 @@ const arr = [
 const btn = document.querySelector('.panel__add-goods');
 const table = document.querySelector('.table__body');
 const modal = document.querySelector('.overlay');
+const form = document.querySelector('.cms__goods');
+
+console.log(arr);
+
+form.addEventListener('click', (e) => {
+  const target = e.target;
+  if (target.closest('.table__body')) {
+    const a = arr.pop();
+
+    target.closest('.row').remove(a);
+    console.log(a);
+    console.log(arr);
+  }
+});
 
 
 btn.addEventListener('click', () => {
@@ -165,7 +179,8 @@ const numbers = () => {
   });
 };
 
-console.log(arr);
+
+/*
 table.addEventListener('click', (e) => {
   const target = e.target;
 
@@ -176,6 +191,8 @@ table.addEventListener('click', (e) => {
   arr.splice(a);
   console.log(arr);
 });
+
+*/
 
 
 const renderGoods = (arr) => {
