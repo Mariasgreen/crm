@@ -9,7 +9,7 @@ overlay.classList.remove('active');
 
 const arr = [
   {
-    'id': 1,
+    'id': 11,
     'title': 'Смартфон Xiaomi 11T 8/128GB',
     'price': 27000,
     'description': 'Смартфон Xiaomi 11T – это представитель флагманской линейки, выпущенной во второй половине 2021 года. И он полностью соответствует такому позиционированию, предоставляя своим обладателям возможность пользоваться отличными камерами, ни в чем себя не ограничивать при запуске игр и других требовательных приложений.',
@@ -23,7 +23,7 @@ const arr = [
     },
   },
   {
-    'id': 2,
+    'id': 72,
     'title': 'Радиоуправляемый автомобиль Cheetan',
     'price': 4000,
     'description': 'Внедорожник на дистанционном управлении. Скорость 25км/ч. Возраст 7 - 14 лет',
@@ -37,7 +37,7 @@ const arr = [
     },
   },
   {
-    'id': 3,
+    'id': 399999,
     'title': 'ТВ приставка MECOOL KI',
     'price': 12400,
     'description': 'Всего лишь один шаг сделает ваш телевизор умным, Быстрый и умный MECOOL KI PRO, прекрасно спроектированный, сочетает в себе прочный процессор Cortex-A53 с чипом Amlogic S905D',
@@ -51,7 +51,7 @@ const arr = [
     },
   },
   {
-    'id': 4,
+    'id': 4444,
     'title': 'Витая пара PROConnect 01-0043-3-25',
     'price': 22,
     'description': 'Витая пара Proconnect 01-0043-3-25 является сетевым кабелем с 4 парами проводов типа UTP, в качестве проводника в которых используется алюминий, плакированный медью CCA. Такая неэкранированная витая пара с одножильными проводами диаметром 0.50 мм широко применяется в процессе сетевых монтажных работ. С ее помощью вы сможете обеспечить развертывание локальной сети в домашних условиях или на предприятии, объединить все необходимое вам оборудование в единую сеть.',
@@ -71,13 +71,6 @@ const arr = [
 const btn = document.querySelector('.panel__add-goods');
 const table = document.querySelector('.table__body');
 const modal = document.querySelector('.overlay');
-const del =document.querySelectorAll('.table__btn_del')
-
-
-
-
-
-
 
 btn.addEventListener('click', () => {
   modal.classList.add('active');
@@ -95,6 +88,8 @@ modal.addEventListener('click', (e) => {
 const createRow = ({id, title, price, category, count, units, discont}) => {
   const tr = document.createElement('tr');
   tr.classList.add('row');
+  tr.setAttribute('data-id', id);
+
 
   const tdnumber = document.createElement('td');
   tdnumber.classList.add('table__cell', 'table__cell-num');
@@ -170,22 +165,26 @@ const numbers = () => {
     i.textContent = n++;
   });
 };
- 
+
 
 table.addEventListener('click', (e) => {
   const target = e.target;
-
   if (target.closest('.table__btn_del')) {
+    const conectId = target.closest('tr').dataset.id;
+    const conectIndex = arr.findIndex(item => item.id == conectId);
+    arr.splice(conectIndex, 1);
     target.closest('.row').remove();
+    console.log(arr);
+    /*
+    const a = [...document.querySelectorAll('.table__btn_del')].indexOf(target);
+    console.log(a);
+    arr.splice(a, 1);
+    target.closest('.row').remove();
+    console.log(target);
+    console.log(arr);
+*/
   }
-  const a = arr.indexOf(target);
-  del.splice(a);
-  console.log(arr);
 });
-
-
-
-
 const renderGoods = (arr) => {
   const allRow = arr.map(createRow);
 
