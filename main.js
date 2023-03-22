@@ -71,16 +71,74 @@ const arr = [
 const btn = document.querySelector('.panel__add-goods');
 const table = document.querySelector('.table__body');
 const modal = document.querySelector('.overlay');
+const checkbox = document.querySelector('.modal__checkbox');
+const discont = document.querySelector('.modal__input_discount');
+const formelems = document.querySelectorAll('.modal__input');
+const form = document.querySelector('.modal__form');
+
+
+function getRandom(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+checkbox.onclick = function() {
+  const isCheck = checkbox.checked;
+  if (isCheck) {
+    discont.disabled = false;
+  } else {
+    discont.value = '';
+    discont.disabled = true;
+  }
+};
+
+
+const price = document.querySelector('#price');
+const count = document.querySelector('#count');
+const modalTotal = document.querySelector('.modal__total-price');
+
+const setDiscount = (discont) => (discont ? (100 - discont) / 100 : 1);
+
+const getTotal = (price, count, discont) => {
+    return price * count * setDiscount(discont);
+};
+
+formelems.forEach(elem => {
+  modalTotal.textContent = '';
+  elem.addEventListener('blur', () => {
+  modalTotal.textContent = getTotal(price.value, count.value, discont.value).toFixed(2);
+});
+});
+
+
+
+formelems.forEach((formelem) => {
+  formelem.required = true;
+});
+
+const closeModal = () => {
+  modal.classList.remove('active');
+};
+
+
+const openModal = () => {
+  modal.classList.add('active');
+  const span = document.querySelector('.vendor-code__id');
+  const num = getRandom(500, 900);
+  span.textContent = num;
+};
+
 
 btn.addEventListener('click', () => {
-  modal.classList.add('active');
+  openModal();
 });
 
 
 modal.addEventListener('click', (e) => {
   const target = e.target;
   if (target === modal || target.closest('.modal__close')) {
-    modal.classList.remove('active');
+    closeModal();
   }
 });
 
@@ -102,6 +160,7 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   idSpan.textContent = 'ID: ' + id;
 
   tdTitle.textContent = title;
+ 
 
 
   tdTitle.prepend(idSpan);
@@ -126,18 +185,9 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   tdPrice.textContent = price;
 
 
-  const promo = () => {
-    if (discont === false) {
-      return price * count;
-    } else {
-      const prc = (price * count) / 100 * discont;
-      return price - prc;
-    }
-  };
-
   const tdTotal = document.createElement('td');
-  tdTotal.classList.add('table__cell');
-  tdTotal.textContent = promo();
+  tdTotal.classList.add('table__cell', 'table__total');
+  tdTotal.textContent = getTotal(count, price, discont);
 
 
   const tdImages = document.createElement('td');
@@ -155,6 +205,29 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   tr.append(tdnumber, tdTitle, tdCategory, tdUnit, tdCount, tdPrice, tdTotal, tdImages);
   return tr;
 };
+
+const addProductData = (product) => {
+  arr.push(product);
+};
+
+const addProductPage = (product, table) => {
+  table.append(createRow(product));
+};
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+
+ 
+  const formData = new FormData(e.target);
+
+  const newProduct = Object.fromEntries(formData);
+  addProductPage(newProduct, table);
+  addProductData(newProduct);
+
+  
+  form.reset();
+  closeModal();
+});
 
 
 const numbers = () => {
@@ -185,12 +258,34 @@ table.addEventListener('click', (e) => {
 */
   }
 });
+
+
+
+
+
+
 const renderGoods = (arr) => {
   const allRow = arr.map(createRow);
+ 
 
   table.append(...allRow);
 };
 
+
 renderGoods(arr);
 
+
+
 numbers();
+
+const getTotalTableSum = (arr = []) => arr.reduce(
+  (acc, {count, price, discont}) =>
+    acc + (price * count) * ((100 - discont) / 100), 0);
+
+
+const allTotalTableSum = () => {
+  document.querySelector('.cms__total-price').textContent = getTotalTableSum(arr).toFixed(2);
+};
+
+
+allTotalTableSum();
