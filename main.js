@@ -96,7 +96,7 @@ checkbox.onclick = function() {
 
 const price = document.querySelector('#price');
 const count = document.querySelector('#count');
-const modalTotal = document.querySelector('.modal__total-price');
+
 
 const setDiscount = (discont) => (discont ? (100 - discont) / 100 : 1);
 
@@ -104,12 +104,27 @@ const getTotal = (price, count, discont) => {
     return price * count * setDiscount(discont);
 };
 
+
+/*
+formelems.forEach((elems) => {
+  elems.onblur = function() {
+    const modalTotal = document.querySelector('.modal__total-price');
+    modalTotal.value = '';
+    const a = getTotal(price.value, count.value, discont.value).toFixed(2);
+    modalTotal.textContent = a;
+  };
+});
+*/
+
 formelems.forEach(elem => {
-  modalTotal.textContent = '';
+  const modalTotal = document.querySelector('.modal__total-price');
+  modalTotal.textContent = '0.00';
   elem.addEventListener('blur', () => {
-  modalTotal.textContent = getTotal(price.value, count.value, discont.value).toFixed(2);
+  modalTotal.value = getTotal(price.value, count.value, discont.value).toFixed(2);
+  
 });
 });
+
 
 
 
@@ -118,15 +133,26 @@ formelems.forEach((formelem) => {
 });
 
 const closeModal = () => {
+  
   modal.classList.remove('active');
+  
 };
 
+const span = document.querySelector('.vendor-code__id');
+const num = (span) =>{
+ return span.textContent = getRandom(500, 900)
+}
 
 const openModal = () => {
   modal.classList.add('active');
-  const span = document.querySelector('.vendor-code__id');
-  const num = getRandom(500, 900);
-  span.textContent = num;
+  num(span);
+  
+
+ /* const span = document.querySelector('.vendor-code__id');
+
+  //sssconst num = getRandom(500, 900);
+  //span.textContent = num;
+  span.textContent = getRandom(500, 900);*/
 };
 
 
@@ -157,8 +183,9 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   tdTitle.classList.add('table__cell', 'table__cell_left', 'table__cell_name');
 
   idSpan.classList.add('table__cell-id');
-  idSpan.textContent = 'ID: ' + id;
+  //idSpan.textContent = 'ID: ' + id;
 
+  idSpan.textContent = 'ID: ' + id;
   tdTitle.textContent = title;
  
 
@@ -187,7 +214,8 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 
   const tdTotal = document.createElement('td');
   tdTotal.classList.add('table__cell', 'table__total');
-  tdTotal.textContent = getTotal(count, price, discont);
+  let total = getTotal(count, price, discont);
+  tdTotal.textContent = total;
 
 
   const tdImages = document.createElement('td');
@@ -221,10 +249,14 @@ form.addEventListener('submit', e => {
   const formData = new FormData(e.target);
 
   const newProduct = Object.fromEntries(formData);
+  newProduct.id = document.querySelector('.vendor-code__id').textContent;
+  newProduct.discont = document.querySelector('.modal__input_discount').textContent;
+
   addProductPage(newProduct, table);
   addProductData(newProduct);
 
-  
+  numbers()
+
   form.reset();
   closeModal();
 });
@@ -270,6 +302,8 @@ const renderGoods = (arr) => {
 
   table.append(...allRow);
 };
+
+
 
 
 renderGoods(arr);
