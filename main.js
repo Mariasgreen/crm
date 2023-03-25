@@ -100,8 +100,15 @@ const count = document.querySelector('#count');
 
 const setDiscount = (discont) => (discont ? (100 - discont) / 100 : 1);
 
-const getTotal = (price, count, discont) => {
-    return price * count * setDiscount(discont);
+const getTotal = (price, count, discont) => price * count * setDiscount(discont);
+
+const getTotalTableSum = (arr = []) => arr.reduce(
+  (acc, {count, price, discont}) =>
+    acc + (price * count) * setDiscount(discont), 0);
+
+
+const allTotalTableSum = () => {
+  document.querySelector('.cms__total-price').textContent = getTotalTableSum(arr).toFixed(2);
 };
 
 
@@ -120,12 +127,9 @@ formelems.forEach(elem => {
   const modalTotal = document.querySelector('.modal__total-price');
   modalTotal.textContent = '0.00';
   elem.addEventListener('blur', () => {
-  modalTotal.value = getTotal(price.value, count.value, discont.value).toFixed(2);
-  
+    modalTotal.value = getTotal(price.value, count.value, discont.value).toFixed(2);
+  });
 });
-});
-
-
 
 
 formelems.forEach((formelem) => {
@@ -133,26 +137,16 @@ formelems.forEach((formelem) => {
 });
 
 const closeModal = () => {
-  
+  discont.disabled = true;
   modal.classList.remove('active');
-  
 };
 
 const span = document.querySelector('.vendor-code__id');
-const num = (span) =>{
- return span.textContent = getRandom(500, 900)
-}
+const num = (span) => span.textContent = getRandom(500, 900);
 
 const openModal = () => {
   modal.classList.add('active');
   num(span);
-  
-
- /* const span = document.querySelector('.vendor-code__id');
-
-  //sssconst num = getRandom(500, 900);
-  //span.textContent = num;
-  span.textContent = getRandom(500, 900);*/
 };
 
 
@@ -167,6 +161,20 @@ modal.addEventListener('click', (e) => {
     closeModal();
   }
 });
+
+const addProductData = (product) => {
+  arr.push(product);
+};
+
+
+const numbers = () => {
+  const numTd = table.querySelectorAll('.table__cell-num');
+
+  let n = 1;
+  numTd.forEach((i) => {
+    i.textContent = n++;
+  });
+};
 
 
 const createRow = ({id, title, price, category, count, units, discont}) => {
@@ -183,11 +191,8 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   tdTitle.classList.add('table__cell', 'table__cell_left', 'table__cell_name');
 
   idSpan.classList.add('table__cell-id');
-  //idSpan.textContent = 'ID: ' + id;
-
   idSpan.textContent = 'ID: ' + id;
   tdTitle.textContent = title;
- 
 
 
   tdTitle.prepend(idSpan);
@@ -214,7 +219,7 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
 
   const tdTotal = document.createElement('td');
   tdTotal.classList.add('table__cell', 'table__total');
-  let total = getTotal(count, price, discont);
+  const total = getTotal(count, price, discont).toFixed(2);
   tdTotal.textContent = total;
 
 
@@ -234,10 +239,6 @@ const createRow = ({id, title, price, category, count, units, discont}) => {
   return tr;
 };
 
-const addProductData = (product) => {
-  arr.push(product);
-};
-
 const addProductPage = (product, table) => {
   table.append(createRow(product));
 };
@@ -245,31 +246,24 @@ const addProductPage = (product, table) => {
 form.addEventListener('submit', e => {
   e.preventDefault();
 
- 
+
   const formData = new FormData(e.target);
 
   const newProduct = Object.fromEntries(formData);
   newProduct.id = document.querySelector('.vendor-code__id').textContent;
-  newProduct.discont = document.querySelector('.modal__input_discount').textContent;
+
+  newProduct.discont = document.querySelector('.modal__input_discount').value;
+
 
   addProductPage(newProduct, table);
   addProductData(newProduct);
 
-  numbers()
+  numbers();
+  allTotalTableSum();
 
   form.reset();
   closeModal();
 });
-
-
-const numbers = () => {
-  const numTd = table.querySelectorAll('.table__cell-num');
-
-  let n = 1;
-  numTd.forEach((i) => {
-    i.textContent = n++;
-  });
-};
 
 
 table.addEventListener('click', (e) => {
@@ -280,6 +274,8 @@ table.addEventListener('click', (e) => {
     arr.splice(conectIndex, 1);
     target.closest('.row').remove();
     console.log(arr);
+    numbers(arr);
+    allTotalTableSum();
     /*
     const a = [...document.querySelectorAll('.table__btn_del')].indexOf(target);
     console.log(a);
@@ -292,34 +288,12 @@ table.addEventListener('click', (e) => {
 });
 
 
-
-
-
-
 const renderGoods = (arr) => {
   const allRow = arr.map(createRow);
- 
-
   table.append(...allRow);
+  numbers();
+  allTotalTableSum();
 };
-
-
-
 
 renderGoods(arr);
 
-
-
-numbers();
-
-const getTotalTableSum = (arr = []) => arr.reduce(
-  (acc, {count, price, discont}) =>
-    acc + (price * count) * ((100 - discont) / 100), 0);
-
-
-const allTotalTableSum = () => {
-  document.querySelector('.cms__total-price').textContent = getTotalTableSum(arr).toFixed(2);
-};
-
-
-allTotalTableSum();
