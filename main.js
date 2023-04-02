@@ -1,13 +1,22 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable max-len */
 
-'use strict';
+import {renderGoods}  from './modules/render.js';
+import{ allTotalTableSum} from './modules/summs.js';
 
-const overlay = document.querySelector('.overlay');
-overlay.classList.remove('active');
+import create from './modules/const.js';
+const{ btn,
+  table,
+  modal,
+  form,
+  overlay,
+  }=create;
 
 
-const arr = [
+import{closeModal,  openModal} from './modules/modal.js';
+import{addProductData, numbers, addProductPage} from './modules/table.js';
+
+
+
+ export const arr = [
   {
     'id': 11,
     'title': 'Смартфон Xiaomi 11T 8/128GB',
@@ -68,232 +77,69 @@ const arr = [
 
 ];
 
-const btn = document.querySelector('.panel__add-goods');
-const table = document.querySelector('.table__body');
-const modal = document.querySelector('.overlay');
-const checkbox = document.querySelector('.modal__checkbox');
-const discont = document.querySelector('.modal__input_discount');
-const formelems = document.querySelectorAll('.modal__input');
-const form = document.querySelector('.modal__form');
 
 
-function getRandom(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+
+
+
+
+
+
+
+const init = () =>{
+  
+  overlay.classList.remove('active');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+  
+  
+    const formData = new FormData(e.target);
+  
+    const newProduct = Object.fromEntries(formData);
+    newProduct.id = document.querySelector('.vendor-code__id').textContent;
+  
+    newProduct.discont = document.querySelector('.modal__input_discount').value;
+  
+  
+    addProductPage(newProduct, table);
+    addProductData(newProduct);
+  
+    numbers();
+    allTotalTableSum();
+  
+    form.reset();
+    closeModal();
+  });
+  
+  table.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target.closest('.table__btn_del')) {
+      const conectId = target.closest('tr').dataset.id;
+      const conectIndex = arr.findIndex(item => item.id == conectId);
+      arr.splice(conectIndex, 1);
+      target.closest('.row').remove();
+      console.log(arr);
+      numbers(arr);
+      allTotalTableSum();
+    }
+
+  });
+  btn.addEventListener('click', () => {
+    openModal();
+  });
+  
+
+  modal.addEventListener('click', (e) => {
+    const target = e.target;
+    if (target === modal || target.closest('.modal__close')) {
+      closeModal();
+    }
+  });
+
+ 
+
+  renderGoods(arr);
 }
 
-checkbox.onclick = function() {
-  const isCheck = checkbox.checked;
-  if (isCheck) {
-    discont.disabled = false;
-  } else {
-    discont.value = '';
-    discont.disabled = true;
-  }
-};
-
-
-const price = document.querySelector('#price');
-const count = document.querySelector('#count');
-
-
-const setDiscount = (discont) => (discont ? (100 - discont) / 100 : 1);
-
-const getTotal = (price, count, discont) => price * count * setDiscount(discont);
-
-const getTotalTableSum = (arr = []) => arr.reduce(
-  (acc, {count, price, discont}) =>
-    acc + (price * count) * setDiscount(discont), 0);
-
-
-const allTotalTableSum = () => {
-  document.querySelector('.cms__total-price').textContent = getTotalTableSum(arr).toFixed(2);
-};
-
-
-/*
-formelems.forEach((elems) => {
-  elems.onblur = function() {
-    const modalTotal = document.querySelector('.modal__total-price');
-    modalTotal.value = '';
-    const a = getTotal(price.value, count.value, discont.value).toFixed(2);
-    modalTotal.textContent = a;
-  };
-});
-*/
-
-formelems.forEach(elem => {
-  const modalTotal = document.querySelector('.modal__total-price');
-  modalTotal.textContent = '0.00';
-  elem.addEventListener('blur', () => {
-    modalTotal.value = getTotal(price.value, count.value, discont.value).toFixed(2);
-  });
-});
-
-
-formelems.forEach((formelem) => {
-  formelem.required = true;
-});
-
-const closeModal = () => {
-  discont.disabled = true;
-  modal.classList.remove('active');
-};
-
-const span = document.querySelector('.vendor-code__id');
-const num = (span) => span.textContent = getRandom(500, 900);
-
-const openModal = () => {
-  modal.classList.add('active');
-  num(span);
-};
-
-
-btn.addEventListener('click', () => {
-  openModal();
-});
-
-
-modal.addEventListener('click', (e) => {
-  const target = e.target;
-  if (target === modal || target.closest('.modal__close')) {
-    closeModal();
-  }
-});
-
-const addProductData = (product) => {
-  arr.push(product);
-};
-
-
-const numbers = () => {
-  const numTd = table.querySelectorAll('.table__cell-num');
-
-  let n = 1;
-  numTd.forEach((i) => {
-    i.textContent = n++;
-  });
-};
-
-
-const createRow = ({id, title, price, category, count, units, discont}) => {
-  const tr = document.createElement('tr');
-  tr.classList.add('row');
-  tr.setAttribute('data-id', id);
-
-
-  const tdnumber = document.createElement('td');
-  tdnumber.classList.add('table__cell', 'table__cell-num');
-  const idSpan = document.createElement('span');
-  const tdTitle = document.createElement('td');
-
-  tdTitle.classList.add('table__cell', 'table__cell_left', 'table__cell_name');
-
-  idSpan.classList.add('table__cell-id');
-  idSpan.textContent = 'ID: ' + id;
-  tdTitle.textContent = title;
-
-
-  tdTitle.prepend(idSpan);
-
-
-  const tdCategory = document.createElement('td');
-  tdCategory.classList.add('table__cell', 'table__cell_left');
-  tdCategory.textContent = category;
-
-  const tdUnit = document.createElement('td');
-  tdUnit.classList.add('table__cell');
-  tdUnit.textContent = units;
-
-
-  const tdCount = document.createElement('td');
-  tdCount.classList.add('table__cell');
-  tdCount.textContent = count;
-
-
-  const tdPrice = document.createElement('td');
-  tdPrice.classList.add('table__cell');
-  tdPrice.textContent = price;
-
-
-  const tdTotal = document.createElement('td');
-  tdTotal.classList.add('table__cell', 'table__total');
-  const total = getTotal(count, price, discont).toFixed(2);
-  tdTotal.textContent = total;
-
-
-  const tdImages = document.createElement('td');
-
-  tdImages.classList.add('table__cell', 'table__cell_btn-wrapper');
-  const button1 = document.createElement('button');
-  button1.classList.add('table__btn', 'table__btn_pic');
-  const button2 = document.createElement('button');
-  button2.classList.add('table__btn', 'table__btn_edit');
-  const button3 = document.createElement('button');
-  button3.classList.add('table__btn', 'table__btn_del');
-  tdImages.append(button1, button2, button3);
-
-
-  tr.append(tdnumber, tdTitle, tdCategory, tdUnit, tdCount, tdPrice, tdTotal, tdImages);
-  return tr;
-};
-
-const addProductPage = (product, table) => {
-  table.append(createRow(product));
-};
-
-form.addEventListener('submit', e => {
-  e.preventDefault();
-
-
-  const formData = new FormData(e.target);
-
-  const newProduct = Object.fromEntries(formData);
-  newProduct.id = document.querySelector('.vendor-code__id').textContent;
-
-  newProduct.discont = document.querySelector('.modal__input_discount').value;
-
-
-  addProductPage(newProduct, table);
-  addProductData(newProduct);
-
-  numbers();
-  allTotalTableSum();
-
-  form.reset();
-  closeModal();
-});
-
-
-table.addEventListener('click', (e) => {
-  const target = e.target;
-  if (target.closest('.table__btn_del')) {
-    const conectId = target.closest('tr').dataset.id;
-    const conectIndex = arr.findIndex(item => item.id == conectId);
-    arr.splice(conectIndex, 1);
-    target.closest('.row').remove();
-    console.log(arr);
-    numbers(arr);
-    allTotalTableSum();
-    /*
-    const a = [...document.querySelectorAll('.table__btn_del')].indexOf(target);
-    console.log(a);
-    arr.splice(a, 1);
-    target.closest('.row').remove();
-    console.log(target);
-    console.log(arr);
-*/
-  }
-});
-
-
-const renderGoods = (arr) => {
-  const allRow = arr.map(createRow);
-  table.append(...allRow);
-  numbers();
-  allTotalTableSum();
-};
-
-renderGoods(arr);
-
+init()
