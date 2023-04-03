@@ -4,7 +4,7 @@ import {renderGoods}  from './modules/render.js';
 import create from './modules/const.js';
 const{overlay}=create;
 
-import{formModal, tableNum,  modalBtn, modalModal, reqModal, totalModal} from './modules/control.js';
+import{formModal, tableNum,  modalBtn, modalModal, reqModal, totalModal, checkboxModal} from './modules/control.js';
 
 
  export const arr = [
@@ -81,6 +81,7 @@ const init = () =>{
   
   overlay.classList.remove('active');
 
+  checkboxModal()
   formModal()
   tableNum()
   modalBtn ()

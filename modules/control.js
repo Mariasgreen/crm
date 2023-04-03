@@ -7,7 +7,8 @@ const { btn,
   price,
   count,
   discont,
-  formelems
+  formelems,
+  checkbox,
   } = create;
 
 import {closeModal,  openModal}  from './modal.js'
@@ -94,3 +95,15 @@ export const totalModal = () =>{
     });
   }
   
+
+  export const checkboxModal = () => {
+    checkbox.onclick = function() {
+      const isCheck = checkbox.checked;
+      if (isCheck) {
+        discont.disabled = false;
+      } else {
+        discont.value = '';
+        discont.disabled = true;
+      }
+    };
+  }
