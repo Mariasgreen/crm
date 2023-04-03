@@ -1,19 +1,10 @@
 
 import {renderGoods}  from './modules/render.js';
-import{ allTotalTableSum} from './modules/summs.js';
 
 import create from './modules/const.js';
-const{ btn,
-  table,
-  modal,
-  form,
-  overlay,
-  }=create;
+const{overlay}=create;
 
-
-import{closeModal,  openModal} from './modules/modal.js';
-import{addProductData, numbers, addProductPage} from './modules/table.js';
-
+import{formModal, tableNum,  modalBtn, modalModal, reqModal, totalModal} from './modules/control.js';
 
 
  export const arr = [
@@ -90,52 +81,12 @@ const init = () =>{
   
   overlay.classList.remove('active');
 
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-  
-  
-    const formData = new FormData(e.target);
-  
-    const newProduct = Object.fromEntries(formData);
-    newProduct.id = document.querySelector('.vendor-code__id').textContent;
-  
-    newProduct.discont = document.querySelector('.modal__input_discount').value;
-  
-  
-    addProductPage(newProduct, table);
-    addProductData(newProduct);
-  
-    numbers();
-    allTotalTableSum();
-  
-    form.reset();
-    closeModal();
-  });
-  
-  table.addEventListener('click', (e) => {
-    const target = e.target;
-    if (target.closest('.table__btn_del')) {
-      const conectId = target.closest('tr').dataset.id;
-      const conectIndex = arr.findIndex(item => item.id == conectId);
-      arr.splice(conectIndex, 1);
-      target.closest('.row').remove();
-      console.log(arr);
-      numbers(arr);
-      allTotalTableSum();
-    }
-
-  });
-  btn.addEventListener('click', () => {
-    openModal();
-  });
-  
-
-  modal.addEventListener('click', (e) => {
-    const target = e.target;
-    if (target === modal || target.closest('.modal__close')) {
-      closeModal();
-    }
-  });
+  formModal()
+  tableNum()
+  modalBtn ()
+  modalModal()
+  reqModal()
+  totalModal()
 
  
 

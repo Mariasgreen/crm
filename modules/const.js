@@ -10,6 +10,7 @@ const count = document.querySelector('#count');
 const span = document.querySelector('.vendor-code__id');
 const overlay = document.querySelector('.overlay');
 
+
 export default {
     btn,
     table,

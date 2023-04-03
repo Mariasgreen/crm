@@ -1,5 +1,9 @@
 import {arr}  from '/main.js'
 
+
+
+
+
   const setDiscount = (discont) => (discont ? (100 - discont) / 100 : 1);
   
   const getTotal = (price, count, discont) => price * count * setDiscount(discont);
@@ -12,5 +16,7 @@ import {arr}  from '/main.js'
   const allTotalTableSum = () => {
     document.querySelector('.cms__total-price').textContent = getTotalTableSum(arr).toFixed(2);
   };
+
+
 
   export{ setDiscount, getTotal, allTotalTableSum}

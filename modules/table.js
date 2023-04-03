@@ -1,5 +1,6 @@
 import create from './const.js';
 const {table} = create;
+import {arr}  from '/main.js'
 
 import{  getTotal} from './summs.js';
 
